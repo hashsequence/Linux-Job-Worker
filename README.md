@@ -257,9 +257,57 @@ by a valid certificate authority (CA). there is :
 
         * vault to generate signing requests, centrify for renewels of certificates
 
-## Contentious Issues
+### Contentious Issues
 
 * Should the client remember commands they executed and remember the pids, starting timestamp, process command?
 
 * Will logs that are too old be deleted by server, or should the logs just stay in the file system storage, should this be within the scope of the project?
+
+### Development Timeline
+
+(Will be Updated througout development)
+
+* Setup local development environment 
+
+    * working on Ubuntu 16.04 
+    
+    * install protoc 
+        
+        * current version
+        ```
+        $ protoc --version
+        libprotoc 3.11.4
+
+        ```
+    * install golang 
+        
+        * current version
+        ```
+        $ go version
+        go version go1.12.1 linux/amd64
+
+        ```
+    * install openssl (to generate certificates and keys)
+
+        * current version
+        ```
+        $ openssl version
+        OpenSSL 1.0.2g  1 Mar 2016
+        ```
+
+* Setup project directory
+
+    * setup go modules (dependency management)
+    
+* Write Protocol Buffers for grpc and generate go package
+
+* Implement Authentication and Encryption for grpc in go
+
+* Implement Start 
+
+* Implement Stop
+
+* Implement Query 
+
+* Write Tests
 
