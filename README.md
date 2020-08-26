@@ -66,6 +66,8 @@ func Execute(CommandRequest) returns(CommandResponse)
 
 * When the process is completed or exit out due to errors the log folder will have a timestamp appended so pids can be reused
 
+* A second response will be sent to indicate thats its finished with the outputs and error outputs
+
 * Logs will be outputted to the output and errOutput (up to a certain size from the top) of the response and sent to the client via a response when done 
 
 ```
