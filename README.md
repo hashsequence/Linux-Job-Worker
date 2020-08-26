@@ -203,3 +203,21 @@ func QueryRunningProcesses() returns (RunningProcessResponse, error)
 * Basic Queue data structure to execute commands in FIFO order
 
 * Can use the same data store structure for server and client
+
+
+### Authentication
+
+* Using standard GRPC tsl/ssl encryption and authentication via certificates
+
+* we will be using grpc with mutual tls
+
+* certificates will be generated usign openssl and self-signed, though in a real production environment, certificates will be generated and signed 
+by a valid certificate authority (CA). there is :
+
+    * public domains:
+
+        *  Let’s Encrypt - a free automatef open certificate authority got cert generation and distribution  
+
+    * private domains:
+
+        * vault to generate signing requests, centrify for renewels of certs
