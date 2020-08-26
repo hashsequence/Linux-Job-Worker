@@ -302,8 +302,7 @@ by a valid certificate authority (CA). there is :
         * current version
         ```
         $ go version
-        go version go1.12.1 linux/amd64
-
+        go version go1.15 linux/amd64
         ```
     * install openssl (to generate certificates and keys)
 
