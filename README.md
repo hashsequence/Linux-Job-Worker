@@ -23,7 +23,7 @@ Implement a prototype job worker service that provides an API to run arbitrary L
 
 #### Data Management
 Though the use of a database to store persistant data would be ideal, I will be instead storing the outputs and error outputs into logs stored on 
-the file storage of the linux worker. The logs will be generated at start time with the foldername <pid>_<startingTimestamp>
+the file storage of the linux worker. The logs will be generated at start time with the foldername \<pid\>_\<startingTimestamp\>
 The client will have to maintain a queue of commands, the client can query the server to see what is running to determine what can be killed,
 or the client can store a data store pids that were recieved from the execution of start commands
 
@@ -36,7 +36,7 @@ The scope of this project would only deal with a single linux worker interfacing
 
 * The Start Api is called with a StartRequest that has the client's command and required arguments and optional env, dir params
 
-* The Process be executed, two logs will be generated, the standard output and standard error will be redirected into a log file, one for stdout and anothe for stderr and both logs will be located in the same folder with the foldername <pid>_<startingTimestamp>, a response with the pid is sent, outputs should be empty since it was just started
+* The Process be executed, two logs will be generated, the standard output and standard error will be redirected into a log file, one for stdout and anothe for stderr and both logs will be located in the same folder with the foldername \<pid\>_\<startingTimestamp\>, a response with the pid is sent, outputs should be empty since it was just started
 
 * when the process is completed or exit out due to errors the log folder will have a timestamp appended so pids can be reused
 
