@@ -220,4 +220,4 @@ by a valid certificate authority (CA). there is :
 
     * private domains:
 
-        * vault to generate signing requests, centrify for renewels of certs
+        * vault to generate signing requests, centrify for renewels of certificates
