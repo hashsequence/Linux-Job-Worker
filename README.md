@@ -198,9 +198,9 @@ func QueryRunningProcesses() returns (RunningProcessResponse, error)
 
 #### Client
 
-* flags package to parse use commands or have preset commands from a file or hardcoded
+* flags package to parse use commands or have preset commands from a file or hardcoded 
 
-* Basic Queue data structure to execute commands in FIFO order
+* Basic Queue data structure to execute commands in FIFO order, we can use a channel to stream commands
 
 * Can use the same data store structure for server and client
 
