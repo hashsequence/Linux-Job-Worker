@@ -117,7 +117,7 @@ the file to prevent maxing out string size or memory
 
         * get list of running processes from server
 
-Query 
+#### Query 
 ```
 
 type QueryOneRequest {
@@ -216,7 +216,7 @@ by a valid certificate authority (CA). there is :
 
     * public domains:
 
-        *  Let’s Encrypt - a free automatef open certificate authority got cert generation and distribution  
+        *  Let’s Encrypt - a free automated open certificate authority got cert generation and distribution  
 
     * private domains:
 
