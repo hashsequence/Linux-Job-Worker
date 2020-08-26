@@ -27,7 +27,7 @@ the file storage of the linux worker. The logs will be generated at start time w
 The client will have to maintain a queue of commands, the client can query the server to see what is running to determine what can be killed,
 or the client can store a data store pids that were recieved from the execution of start commands
 
-#### scale
+#### Scale
 The scope of this project would only deal with a single linux worker interfacing with one client
 
 ### API Design
@@ -107,17 +107,28 @@ the file to prevent maxing out string size or memory
 
 * Query API should be a unary API since we need an immediate response from state of system at request time
 
+* splitting up Query API into
+
+    * QueryOneProcess:
+
+        * get information on one pid
+
+    * QueryRunningProcesses:
+
+        * get list of running processes from server
+
 Query 
 ```
 
-type QueryRequest {
+type QueryOneRequest {
     int pid
     string startingTimeStamp
+    string processName
     string errorLog
     string outputLog
 }
 
-type QueryResponse {
+type QueryOneResponse {
     //output of requested range of output log
     string output
     //output of requested range of error log
@@ -136,9 +147,9 @@ type RunningProcessResponse {
     []RunningProcess dataTable
 }
 
-func Query(QueryRequest) returns (QueryResponse, error)
+func QueryOneProcess(QueryOneRequest) returns (QueryOneResponse, error)
 
-func RunningProcesses() returns (RunningProcessResponse, error)
+func QueryRunningProcesses() returns (RunningProcessResponse, error)
 
 ```
 
