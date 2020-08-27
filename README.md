@@ -233,6 +233,21 @@ variableField responseFromQuery {
     * can use log, writer and reader packages
 
     * must manage concurrency issues with read and write
+    
+    * will be similar to how linux implements it using the /proc path, but simpler:
+        ```
+        $ ls -al  /proc | head -n 10
+        total 4
+        dr-xr-xr-x 312 root             root                           0 Aug 24 11:41 .
+        drwxr-xr-x  23 root             root                        4096 Aug 17 16:01 ..
+        dr-xr-xr-x   9 root             root                           0 Aug 24 11:41 1
+        dr-xr-xr-x   9 root             root                           0 Aug 26 16:40 10
+        dr-xr-xr-x   9 avwong13         avwong13                       0 Aug 26 16:40 1003
+        dr-xr-xr-x   9 root             root                           0 Aug 26 17:08 1004
+        dr-xr-xr-x   9 avwong13         avwong13                       0 Aug 25 23:08 10202
+        dr-xr-xr-x   9 avwong13         avwong13                       0 Aug 25 23:09 10256
+        dr-xr-xr-x   9 avwong13         avwong13                       0 Aug 24 13:25 10485
+        ```
 
 * The server will only store running pids in memory and have the pass logs available in their respective \<Pid\>_\<startingTimeStamp\> folder
 
