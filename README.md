@@ -34,7 +34,7 @@ The scope of this project would only deal with a single linux worker server inte
 
 * The client will have an Command Api that takes in three types of request, Start, Stop, and Query.
 
-* The client can then execute the commands via Execute Api
+* The client can then execute the commands over the server via Execute Api
 
 ```
 type CommandRequest {
@@ -253,7 +253,7 @@ logs and filepath using path packages
 
 * client is responsible for interpreting response from Execute Api, and must check the response type
 
-* client is responsible of constructing a queue to generate commands to feed to the Execute Api
+* client is responsible of constructing a queue to generate commands to feed to the Execute Api, or can be run by run via terminal
 
 
 ### Authentication
