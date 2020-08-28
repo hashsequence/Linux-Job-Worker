@@ -23,59 +23,32 @@ Implement a prototype job worker service that provides an API to run arbitrary L
 
 #### Data Management
 Though the use of a database to store persistant data would be ideal, I will be instead storing the outputs and error outputs into logs stored on 
-the file storage of the linux worker. The logs will be generated at start time with the foldername \<pid\>_\<startingTimestamp\>
-The client will have to maintain a queue of commands, the client can query the server to see what is running to determine what can be killed,
+the file system of the linux worker. The logs will be generated at start time with the foldername \<pid\>_\<startingTimestamp\>
+The client can query the server to see what is running to determine what can be killed and a query a list of jobs that were executed,
 or the client can store response data from server.
 
 #### Scale
-The scope of this project would only deal with a single linux worker server interfacing with one client
+The scope of this project would only deal with a single linux worker server interfacing with multiple clients
 
 ### API Design
 
 * The client will have an Command Api that takes in three types of request, Start, Stop, and Query.
 
-* The client can then execute the commands over the server via Execute Api
-
-```
-type CommandRequest {
-    variableTypeRequest {
-        StartRequest start 
-        StopRequest stop 
-        QueryRequest query 
-    }
-}
-
-type CommandResponse {
-    variableField response {
-        StartResponse responseFromStart 
-        StopResponse responseFromStop 
-        QueryResponse responseFromQuery 
-    }
-}
-
-
-func Execute(CommandRequest) returns(CommandResponse)
-
-```
+* The client can then execute the commands over the server via Execute APIs'
 
 #### Start
 
 * The Start command is called with a StartRequest that has the client's command and required arguments and optional env, dir params
 
-* The Process be executed, three logs will be generated, the standard output and standard error will be redirected into a log file, one for stdout and another for stderr, the third log called programName.log will have the name of the program and arguments executed in the contents of the log. All logs will be located in the same folder with the foldername \<pid\>_\<startingTimestamp\>, a response with the pid is sent, outputs should be empty since it was just started
+* A uuid (universal unique identification) will be generated and a folder called \<uuid\>-\<startingtimestamp\> will be created, two logs called PID-<pid>-stdout.log and PID-<pid>-stderr.log will be created, 
 
-* When the process is completed or exit out due to errors the log folder will have a timestamp appended so pids can be reused
+* the start command will execute the job and return with the uuid, pid, startingtimestamp, if it fails to execute then a log called FAILED.log will be created to indcate that the job failed to execute
 
-* A second response will be sent to indicate thats its finished with the outputs and error outputs
+* goroutines should manage running processes in the background (outputing into logs, updating dataStore)
 
-* Logs will be outputted to the output and errOutput (up to a certain size from the top) of the response and sent to the client via a response when done 
+* when the job is done it will generate a log called END-\<endtimestamp\>
 
 ```
-type LogOutput {
-    //contents of log, (may change to string array)
-    string contents 
-}
-
 type StartRequest {
     //path of a program or executable
     string command
@@ -93,17 +66,16 @@ type StartResponse {
     //process Id of the running process executed by the command
     //will be 0 if process failed to execute
     int pid 
-    //stdout(standard output) of command/program executed
-    LogOutput output
-    //stderr(standard Error) of command/program executed
-    LogOutput ErrorOutput 
-    //if the command was finished it will be 0, otherwise if command successfully completes it will be 1
-    bool finished
-    //timestamp returns the starting time if just executed or finish time if finished
-    string timeStamp 
+    //univeral unique identifier that tags each unique request made to server
+    string uuid
+    //starting time of start request
+    string startingTimeStamp
+
 }
 
+func ExecuteStart(StartRequest) returns(StartResponse)
 ```
+
 #### Stop
 
 * The User should be able to stop the request based on the pid
@@ -112,63 +84,64 @@ type StartResponse {
 
 * A response will be sent to client indicating process have been stopped along with the contents of the log
 
+* job should be marked as completed with the exit code in the dataStore
+
 ```
+
+type LogOutput {
+    //contents of log
+    []byte contents 
+}
+
 type StopRequest {
     int pid
 }
 
 type StopResponse {
-    LogOutput Output
-    LogOutput errorOutput
+    LogOutput stdout
+    LogOutput stderr
     bool isKilled
 }
+
+func ExecuteStop(StopRequest) returns(StopResponse)
 
 ```
 
 #### Query 
-
-* The client should be able to check what processes are still running
-
-* The Client should be able fetch the logs and fetch the status of the process by pid and starting timestamp
-
-* The client should able to view list of all logs generated by the server
-
-* Client should be able to read the logs into memory and send it and will only grab up to a certain amout of bytes from
-the file to prevent maxing out string size or memory 
 
 
 * There will be only two types of Query
 
     * QueryOneProcess:
 
-        * get information on one pid
+        * return the logs of a job using a valid pid (if it was started) or uuid, along with ProcessInfo
+
 
     * QueryRunningProcesses:
 
-        * get list of running processes from server
-
-    * QueryListOfLogs
-
-        * get list of all logs generated by server 
+        * get a list of job's executed and processInfo for the jobs
 
 ```
 type ProcessInfo {
-    int32 pid 
+    int pid 
     string startingTimeStamp 
+    string endTimeStamp
     string processName 
+    string uuid
     bool isRunning 
-    string logPath 
+    int exitCode
 }
 
-type QueryPidRequest {
+type QueryOneProcessRequest {
     int pid 
     string startingTimeStamp
+    string uuid
 }
 
-type QueryPidResponse {
-    LogOutput output 
-    LogOutput errorOutput 
-    bool isRunning 
+type QueryOneProcessResponse {
+    processInfo procInfo
+    LogOutput stdout 
+    LogOutput stderr 
 }
 
 type QueryRunningProcessesRequest {
@@ -176,35 +149,11 @@ type QueryRunningProcessesRequest {
 }
     
 type QueryRunningProcessesResponse {
-     ProcessInfo[] processTable = 1;
+     ProcessInfo[] processTable 
 }
 
-type QueryListOfLogsRequest {
-    //will be empty since the server just needs to verify its a QueryListOfLogsRequest
-}
-
-type QueryListOfLogsResponse {
-    repeated ProcessInfo processTable = 1;
-}
-
-type QueryRunningProcessesResponse {
-     ProcessInfo[] processTable = 1;
-}
-type QueryRequest {
-    variableField queryCommand {
-        QueryPidRequest queryPid 
-        QueryRunningProcessesRequest queryRunningProcesses 
-        QueryListOfLogsResponse responseFromListOfLogs
-    }
-}
-
-type QueryResponse {
-variableField responseFromQuery {
-        QueryPidResponse responseFromQueryPid
-        QueryRunningProcessesResponse responseFromRunningProcesses
-        QueryListOfLogsResponse responseFromListOfLogs 
-    }
-}
+func ExecuteQueryOneProcess(QueryOneProcessRequest) returns(QueryOneProcessResponse)
+func ExecuteQueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningProcessesResponse)
 
 ```
 
@@ -215,14 +164,28 @@ variableField responseFromQuery {
 
 ####  DataStore
 
-* we can use sync.Map in Go to implement a set of structs to store process info
+* we can use Map in Go to implement a set of structs to store process info and use sync.mutex to handle concurrent transactions, the key to the map will be \<uuid\>-\<startTimeStamp\>
+     ```go
+        type ProcessInfo struct {
+            pid int
+            string startTimeStamp
+            string endTimeStamp
+            string processName
+            string uuid
+            string logPath
+            bool isRunning
+            int exitCode
+        }
+        
+        type dataStore map[string]ProcessInfo
+        //methods to manage access to dataStore
+        //...
+     ```
 
 
 #### Server 
 
-* data store for running pid, starting timestamp, process names
-    
-    * can be implemented with a concurrent map
+* use a DataStore Structure to function as a in-memory database
 
 * function to execute commands 
 
@@ -234,7 +197,7 @@ variableField responseFromQuery {
 
     * must manage concurrency issues with read and write
     
-    * will be similar to how linux implements it using the /proc path, but simpler:
+    * will be similar to how linux implements it using the /proc path:
         ```
         $ ls -al  /proc | head -n 10
         total 4
@@ -249,26 +212,26 @@ variableField responseFromQuery {
         dr-xr-xr-x   9 avwong13         avwong13                       0 Aug 24 13:25 10485
         ```
 
-* The server will only store running pids in memory and have the pass logs available in their respective \<Pid\>_\<startingTimeStamp\> folder
+* The server will only store running pids in memory and have the pass logs available in their respective \<uuid\>_\<startingTimeStamp\> folder
 
 * concurrent go routines to handle cmd executions starting and finishing 
 
-* killing of pid can be implemented can be done through sigkill via syscall
-
-* Execute Api will be a bidirection streaming api, so the server can continously send back responses, while client can send new requests
+* killing of pid can be implemented through sigkill via os.Process.Signal()
 
 * Data for query for all processes ever executed by linux worker server should be generated by iterating through file system and extracting data from
 logs and filepath using path packages
 
-* Implement simple logging for server, as in the server stdout and stderr will output into a log in the server's filesystem
+* I~~mplement simple logging for server, as in the server stdout and stderr will output into a log in the server's filesystem~~
+    
+    * Remarks: don't worry about the logs of the server itself, they can go to stdout/stderr if needed, something like systemd can redirect those to a file.
 
 #### Client
 
-* client is responsible for constructing the commands to be passed to server via the Execute Api
+* client is responsible for constructing the commands to be passed to server via the Execute APIs'
 
-* client is responsible for interpreting response from Execute Api, and must check the response type
+* client is responsible for interpreting response from Execute APIs'
 
-* client is responsible of constructing a queue to generate commands to feed to the Execute Api, or can be run by run via terminal
+* client should remember the information from the response of the requests from the server
 
 
 ### Authentication
@@ -292,9 +255,15 @@ by a valid certificate authority (CA). there is :
 
 * Should the client remember commands they executed and remember the pids, starting timestamp, process command?
 
+    * yes, but not across restarts
+
 * Will logs that are too old be deleted by server, or should the logs just stay in the file system storage, should this be within the scope of the project?
+    
+    * log cleanup is not in scope
 
 * For the output of logs, should the should the contents of the log be loaded into a string array in the response message, or should I leave it as string?
+    
+    * will be using []byte
 
 ### Development Timeline
 
