@@ -251,6 +251,59 @@ by a valid certificate authority (CA). there is :
 
         * vault to generate signing requests, centrify for renewels of certificates
 
+#### Mutual TLS 
+
+* since the client is basically sending commands to the server, both the server and client must know they are indeed safe and valid. Basically we are trying to solve the problem of encrypting messages between client and server and the client and server must know that they are indeed client and server, but how do we solve this?
+
+* here's the basic algorithm to verify:
+    
+    * We have the client, the server, and and an authority
+
+    * the client ask if the server is indeed the valid server
+
+    * the server send its certificate 
+
+    * the client verifys the certificate with the authority
+
+    * the client then sends its certificate to the server after validating the server's certificate is goo
+
+    * the server verifys the certificate with the authority
+
+    * the server then verifies that the certficate is good 
+
+    * now both the server and client knows that the connection is secure
+
+    * the server and client have the respective keys (public key via in the certificates transfered) to encrypt the message, and the respective sides have they own
+    private keys to decrypt the message
+
+* does this algo work?
+
+    * first the client and server can verify its validity by having a central authority to validate both certs
+
+    * when the client/server sends over their certs over connection, if it was tampered with it will be rejected by the authority, and the intermediaries cant really use the information without knowing how to decrypt the message
+
+    * a problem arises when the certificate authority is compromised and is not trustworthy, like someone had access to the ca.key, so how do we have a strong certificate authority, one simple way you could do is have that ca.crt and key in a box without any outside connection, and whenever you need new certs you physically go to the body and sign new certs for new servers/clients. this is hugely un-scalable so we can probably have the box accept secure request from the outside coming in to request certs to be signed. 
+
+* Now how do we create all the needed certs and keys?
+
+    * First we need a certificate authority(ca), the certificate authority provides the server and client its first certificate (ca.crt) it trusts
+        
+        * the certificate authority has a private key (ca.key) that is used to create valid certificates for client and server
+        
+        * the the server/client generates its own certificate accompanied with the private key to decrypt 
+
+        * when a server or client asks to have the certificate validated, the server/client sends a request (.csr) to the ca to create a signed certificate
+
+* In this project we will be making things simpler, since I am the one building the client and server I can make my own ca.crt + ca.key and have it sign
+ the server.crt and client.crt, which is self signing. In production, I would probably have a legitimate certificate authority and a legitimate ca.crt
+
+ * the format of the crt wil be [x509](https://en.wikipedia.org/wiki/X.509) 
+
+ * will be using openssl to generate these certificates
+
+
+
+
 ### Contentious Issues
 
 * Should the client remember commands they executed and remember the pids, starting timestamp, process command?
