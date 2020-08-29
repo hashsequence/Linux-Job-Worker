@@ -234,7 +234,7 @@ logs and filepath using path packages
     
     * Remarks: don't worry about the logs of the server itself, they can go to stdout/stderr if needed, something like systemd can redirect those to a file.
 
-* \<uuid\>-<startTimeStamp> can be implemented like this for example:
+* \<uuid\>-\<startTimeStamp\> can be implemented like this for example:
 
     ```go
     import(
