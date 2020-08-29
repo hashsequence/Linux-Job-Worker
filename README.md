@@ -23,7 +23,7 @@ Implement a prototype job worker service that provides an API to run arbitrary L
 
 #### Data Management
 Though the use of a database to store persistant data would be ideal, I will be instead storing the outputs and error outputs into logs stored on 
-the file system of the linux worker. The logs will be generated at start time with the foldername \<uuid\>_\<startingTimestamp\>
+the file system of the linux worker. The logs will be generated at start time with the foldername \<uuid\>_\<startTimeStamp\>
 The client can query the server to see what is running to determine what can be killed and a query a list of jobs that were executed,
 or the client can store response data from server.
 
@@ -40,9 +40,9 @@ The scope of this project would only deal with a single linux worker server inte
 
 * The Start command is called with a StartRequest that has the client's command and required arguments and optional env, dir params
 
-* A uuid (universal unique identification) will be generated and a folder called \<uuid\>-\<startingtimestamp\>will be created, two logs called PID-<pid>-stdout.log and PID-<pid>-stderr.log will be created, 
+* A uuid (universal unique identification) will be generated and a folder called \<uuid\>-\<startTimeStamp\>will be created, two logs called PID-<pid>-stdout.log and PID-<pid>-stderr.log will be created, 
 
-* the start command will execute the job and return with the uuid, pid, startingtimestamp, if it fails to execute then a log called FAILED.log will be created to indcate that the job failed to execute
+* the start command will execute the job and return with the uuid, pid, startTimeStamp, if it fails to execute then a log called FAILED.log will be created to indcate that the job failed to execute
 
 * goroutines should manage running processes in the background (outputing into logs, updating dataStore)
 
@@ -69,7 +69,7 @@ type StartResponse {
     //univeral unique identifier that tags each unique request made to server
     string uuid
     //starting time of start request
-    string startingTimeStamp
+    string startTimeStamp
 
 }
 
@@ -124,7 +124,7 @@ func ExecuteStop(StopRequest) returns(StopResponse)
 ```
 type ProcessInfo {
     int pid 
-    string startingTimeStamp 
+    string startTimeStamp 
     string endTimeStamp
     string processName 
     string uuid
@@ -134,7 +134,7 @@ type ProcessInfo {
 
 type QueryOneProcessRequest {
     int pid 
-    string startingTimeStamp
+    string startTimeStamp
     string uuid
 }
 
@@ -221,7 +221,7 @@ func ExecuteQueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRun
         dr-xr-xr-x   9 avwong13         avwong13                       0 Aug 24 13:25 10485
         ```
 
-* The server will only store running pids in memory and have the pass logs available in their respective \<uuid\>_\<startingTimeStamp\> folder
+* The server will only store running pids in memory and have the pass logs available in their respective \<uuid\>_\<startTimeStamp\> folder
 
 * concurrent go routines to handle cmd executions starting and finishing 
 

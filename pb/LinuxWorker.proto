@@ -24,7 +24,7 @@ message StartResponse {
     //univeral unique identifier that tags each unique request made to server
     string uuid = 2;
     //starting time of start request
-    string startingTimeStamp = 3;
+    string startTimeStamp = 3;
 
 }
 
@@ -42,7 +42,7 @@ message StopResponse {
 
 message ProcessInfo {
     int32 pid = 1;
-    string startingTimeStamp = 2;
+    string startTimeStamp = 2;
     string endTimeStamp = 3;
     string processName = 4;
     string uuid = 5;
@@ -52,7 +52,7 @@ message ProcessInfo {
 
 message QueryOneProcessRequest {
     int32 pid = 1;
-    string startingTimeStamp = 2;
+    string startTimeStamp = 2;
     string uuid = 3;
 }
 
