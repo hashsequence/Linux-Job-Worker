@@ -234,6 +234,23 @@ logs and filepath using path packages
     
     * Remarks: don't worry about the logs of the server itself, they can go to stdout/stderr if needed, something like systemd can redirect those to a file.
 
+* \<uuid\>-<startTimeStamp> can be implemented like this for example:
+
+    ```go
+    import(
+        "fmt"
+        guuid "github.com/google/uuid"
+        "time"
+        "strings"
+    )
+
+    func main() {
+        requestId := guuid.New().String() + "-" + strings.ReplaceAll(time.Now().Format("20060102150405.000000.000000000"),".","")
+        fmt.Println(requestId)
+    }
+
+    ```
+
 #### Client
 
 * client is responsible for constructing the commands to be passed to server via the Execute APIs'
