@@ -362,7 +362,7 @@ by a valid certificate authority (CA). there is :
 
     * setup go modules (dependency management)
 
-* Write Protocol Buffers for grpc and generate go package [LinuxWorker.proto](https://github.com/hashsequence/Linux-Job-Worker/pb/LinuxWorker.proto)
+* Write Protocol Buffers for grpc and generate go package [LinuxWorker.proto](https://github.com/hashsequence/Linux-Job-Worker/blob/feature/Design-Doc_Avery_V2/pb/LinuxWorker.proto)
 
 * Implement Authentication and Encryption for grpc in go
 
