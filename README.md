@@ -23,7 +23,7 @@ Implement a prototype job worker service that provides an API to run arbitrary L
 
 #### Data Management
 Though the use of a database to store persistant data would be ideal, I will be instead storing the outputs and error outputs into logs stored on 
-the file system of the linux worker. The logs will be generated at start time with the foldername \<pid\>_\<startingTimestamp\>
+the file system of the linux worker. The logs will be generated at start time with the foldername \<uuid\>_\<startingTimestamp\>
 The client can query the server to see what is running to determine what can be killed and a query a list of jobs that were executed,
 or the client can store response data from server.
 
@@ -40,13 +40,13 @@ The scope of this project would only deal with a single linux worker server inte
 
 * The Start command is called with a StartRequest that has the client's command and required arguments and optional env, dir params
 
-* A uuid (universal unique identification) will be generated and a folder called \<uuid\>-\<startingtimestamp\> will be created, two logs called PID-<pid>-stdout.log and PID-<pid>-stderr.log will be created, 
+* A uuid (universal unique identification) will be generated and a folder called \<uuid\>-\<startingtimestamp\>will be created, two logs called PID-<pid>-stdout.log and PID-<pid>-stderr.log will be created, 
 
 * the start command will execute the job and return with the uuid, pid, startingtimestamp, if it fails to execute then a log called FAILED.log will be created to indcate that the job failed to execute
 
 * goroutines should manage running processes in the background (outputing into logs, updating dataStore)
 
-* when the job is done it will generate a log called END-\<endtimestamp\>
+* when the job is done it will generate a log called END-\<endtimestamp\>.log
 
 ```
 type StartRequest {
@@ -180,7 +180,16 @@ func ExecuteQueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRun
         type dataStore map[string]ProcessInfo
         //methods to manage access to dataStore
         //...
+
+        //Also we might need a mapping betwen pid <-> uuid for query purposes 
+
+        type PidToUuid map[int]string
+        type UuidToPid map[int]string
+
      ```
+     * There are better sources for in memory datastore like redis, but for the scope of the project I will use the ones I will implement with Go
+        
+        * the tradeoff will be performance by using an simple datastore with mutexes rather than something more industry standard like redis
 
 
 #### Server 
@@ -353,7 +362,7 @@ by a valid certificate authority (CA). there is :
 
     * setup go modules (dependency management)
 
-* Write Protocol Buffers for grpc and generate go package
+* Write Protocol Buffers for grpc and generate go package [LinuxWorker.proto](https://github.com/hashsequence/Linux-Job-Worker/pb/LinuxWorker.proto)
 
 * Implement Authentication and Encryption for grpc in go
 
