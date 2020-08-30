@@ -190,7 +190,7 @@ func ExecuteQueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRun
         	pidToUuid
         	uuidToPid
         }
-        //methods to update, delete, add, access
+        //methods to update, delete, add, access, create log folders
 
 
      ```
@@ -349,6 +349,8 @@ by a valid certificate authority (CA). there is :
 * For the output of logs, should the should the contents of the log be loaded into a string array in the response message, or should I leave it as string?
     
     * will be using []byte
+
+* Memory management of dataStore: Since running jobs over time and having the server keeping track of new entries of jobs in the data Store gets expensive, should their be a process to delete entries or truncate the data Store over time? Perhaps clear the dataStore after a period of time passed, maybe delete jobs that have been done for a period of time
 
 ### Development Timeline
 
