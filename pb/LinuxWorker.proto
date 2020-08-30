@@ -52,8 +52,7 @@ message ProcessInfo {
 
 message QueryOneProcessRequest {
     int32 pid = 1;
-    string startTimeStamp = 2;
-    string uuid = 3;
+    string uuid = 2;
 }
 
 message QueryOneProcessResponse {

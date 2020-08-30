@@ -128,7 +128,6 @@ type ProcessInfo {
 
 type QueryOneProcessRequest {
     int pid 
-    string startTimeStamp
     string uuid
 }
 
