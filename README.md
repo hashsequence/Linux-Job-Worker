@@ -167,7 +167,7 @@ func ExecuteQueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRun
 * we can use Map in Go to implement a set of structs to store process info and use sync.mutex to handle concurrent transactions, the key to the map will be \<uuid\>-\<startTimeStamp\>
      ```go
 
-        type processInfo struct {
+        type ProcessInfo struct {
         	pid int
             startTimeStamp string
             endTimeStamp string
@@ -178,7 +178,7 @@ func ExecuteQueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRun
             exitCode int
         }
 
-        type processTable map[string]processInfo
+        type ProcessTable map[string]ProcessInfo
         type pidToUuid map[int]string
         type uuidToPid map[int]string
 
