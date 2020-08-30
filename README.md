@@ -174,7 +174,7 @@ func ExecuteQueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRun
             exitCode int
         }
 
-        type ProcessTable map[string]ProcessInfo
+        type ProcessTable map[string]*ProcessInfo
         type pidToUuid map[int]string
         type uuidToPid map[string]int
 
