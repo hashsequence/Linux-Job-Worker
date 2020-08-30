@@ -87,19 +87,13 @@ func ExecuteStart(StartRequest) returns(StartResponse)
 * job should be marked as completed with the exit code in the dataStore
 
 ```
-
-type LogOutput {
-    //contents of log
-    []byte contents 
-}
-
 type StopRequest {
     int pid
 }
 
 type StopResponse {
-    LogOutput stdout
-    LogOutput stderr
+    []byte stdout
+    []byte stderr
     bool isKilled
 }
 
@@ -140,8 +134,8 @@ type QueryOneProcessRequest {
 
 type QueryOneProcessResponse {
     processInfo procInfo
-    LogOutput stdout 
-    LogOutput stderr 
+    []byte stdout 
+    []byte stderr 
 }
 
 type QueryRunningProcessesRequest {
