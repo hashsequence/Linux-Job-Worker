@@ -226,7 +226,7 @@ func ExecuteQueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRun
 
 * concurrent go routines to handle cmd executions starting and finishing 
 
-* killing of pid can be implemented through sigkill via os.Process.Signal()
+* killing of pid can be implemented via os.Process.Signal() by sending a kill signal to process
 
 * Querys will use information from dataStore and logs from server
 
