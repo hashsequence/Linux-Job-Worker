@@ -170,13 +170,13 @@ func ExecuteQueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRun
      ```go
 
         type ProcessInfo struct {
-        	pid int
+            pid int
             startTimeStamp string
             endTimeStamp string
             processName string
             uuid string
             logPath string
-        	isRunning bool
+            isRunning bool
             exitCode int
         }
 
