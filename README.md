@@ -166,25 +166,30 @@ func ExecuteQueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRun
 
 * we can use Map in Go to implement a set of structs to store process info and use sync.mutex to handle concurrent transactions, the key to the map will be \<uuid\>-\<startTimeStamp\>
      ```go
-        type ProcessInfo struct {
-            pid int
-            string startTimeStamp
-            string endTimeStamp
-            string processName
-            string uuid
-            string logPath
-            bool isRunning
-            int exitCode
+
+        type processInfo struct {
+        	pid int
+            startTimeStamp string
+            endTimeStamp string
+            processName string
+            uuid string
+            logPath string
+        	isRunning bool
+            exitCode int
         }
-        
-        type dataStore map[string]ProcessInfo
-        //methods to manage access to dataStore
-        //...
 
-        //Also we might need a mapping betwen pid <-> uuid for query purposes 
+        type processTable map[string]processInfo
+        type pidToUuid map[int]string
+        type uuidToPid map[int]string
 
-        type PidToUuid map[int]string
-        type UuidToPid map[int]string
+        type DataStore struct {
+        	sync.RWMutex
+        	processTable
+        	pidToUuid
+        	uuidToPid
+        }
+        //methods to update, delete, add, access
+
 
      ```
      * There are better sources for in memory datastore like redis, but for the scope of the project I will use the ones I will implement with Go
