@@ -350,7 +350,7 @@ by a valid certificate authority (CA). there is :
     
     * will be using []byte
 
-* Memory management of dataStore: Since running jobs over time and having the server keeping track of new entries of jobs in the data Store gets expensive, should their be a process to delete entries or truncate the data Store over time? Perhaps clear the dataStore after a period of time passed, maybe delete jobs that have been done for a period of time
+* Memory management of dataStore: Since running jobs over time and having the server keeping track of new entries of jobs in the data Store gets expensive, should their be a process to delete entries or truncate the data Store over time? Perhaps clear the dataStore after a period of time passed? Maybe delete jobs that have been done for a period of time?
 
 ### Development Timeline
 
