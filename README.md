@@ -23,7 +23,7 @@ Implement a prototype job worker service that provides an API to run arbitrary L
 
 #### Data Management
 Though the use of a database to store persistant data would be ideal, I will be instead storing the outputs and error outputs into logs stored on 
-the file system of the linux worker. The logs will be generated at start time with the foldername \<uuid\>_\<startTimeStamp\>
+the file system of the linux worker. The logs will be generated at start time with the foldername \<uuid\>-\<startTimeStamp\>
 The client can query the server to see what is running to determine what can be killed and a query a list of jobs that were executed,
 or the client can store response data from server.
 
@@ -222,7 +222,7 @@ func ExecuteQueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRun
         dr-xr-xr-x   9 avwong13         avwong13                       0 Aug 24 13:25 10485
         ```
 
-* The server will store process info of jobs that were requeste in memory in the dataStore and have logs for each request named \<uuid\>_\<startTimeStamp\> folder
+* The server will store process info of jobs that were requeste in memory in the dataStore and have logs for each request named \<uuid\>-\<startTimeStamp\> folder
 
 * concurrent go routines to handle cmd executions starting and finishing 
 
