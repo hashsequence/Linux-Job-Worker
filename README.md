@@ -32,7 +32,7 @@ The scope of this project would only deal with a single linux worker server inte
 
 ### API Design
 
-* The client will have an Command Api that takes in three types of request, Start, Stop, and Query.
+* The client will have an Command Api that takes in three types of request, Start, Stop, and Query
 
 * The client can then execute the commands over the server via Execute APIs'
 
@@ -40,13 +40,13 @@ The scope of this project would only deal with a single linux worker server inte
 
 * The Start command is called with a StartRequest that has the client's command and required arguments and optional env, dir params
 
-* A uuid (universal unique identification) will be generated and a folder called \<uuid\>-\<startTimeStamp\>will be created, two logs called PID-<pid>-stdout.log and PID-<pid>-stderr.log will be created, 
+* A uuid (universal unique identification) will be generated and a folder called \<uuid\>-\<startTimeStamp\>will be created, two logs called PID-<pid>-stdout.log and PID-<pid>-stderr.log will be created
 
-* the start command will execute the job and return with the uuid, pid, startTimeStamp, if it fails to execute then a log called FAILED.log will be created to indcate that the job failed to execute
+* the start command will execute the job and return with the uuid, pid, startTimeStamp, if it fails to execute then a log called FAILED.log will be created to indcate that the job failed to execute, and the process table will be correspondingly updated
 
 * goroutines should manage running processes in the background (outputing into logs, updating dataStore)
 
-* when the job is done it will generate a log called END-\<endtimestamp\>.log
+* when the job is done it will generate a log called END-\<endtimestamp\>.log, and the process table will be updated
 
 ```
 type StartRequest {
@@ -176,7 +176,7 @@ func ExecuteQueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRun
 
         type ProcessTable map[string]ProcessInfo
         type pidToUuid map[int]string
-        type uuidToPid map[int]string
+        type uuidToPid map[string]int
 
         type DataStore struct {
         	sync.RWMutex
@@ -184,7 +184,7 @@ func ExecuteQueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRun
         	pidToUuid
         	uuidToPid
         }
-        //methods to update, delete, add, access, create log folders
+        //methods to update, delete, add, access, create accompanying log folders
 
 
      ```
