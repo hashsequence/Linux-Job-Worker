@@ -176,7 +176,8 @@ func QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningPro
 		    stdoutPath string
 		    stderrPath string
 		    isRunning bool
-		    exitCode int
+            exitCode int
+            string status
 	    }
 
         //key will be uuid
