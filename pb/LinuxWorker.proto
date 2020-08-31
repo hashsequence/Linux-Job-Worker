@@ -25,18 +25,20 @@ message StartResponse {
     string uuid = 2;
     //starting time of start request
     string startTimeStamp = 3;
+    string status = 4;
 
 }
 
 
 message StopRequest {
-    int32 pid = 1;
+    string uuid = 1;
 }
 
 message StopResponse {
     bytes stdout = 1;
     bytes stderr = 2;
     bool isKilled = 3;
+    string status = 4;
 }
 
 
@@ -51,14 +53,14 @@ message ProcessInfo {
 }
 
 message QueryOneProcessRequest {
-    int32 pid = 1;
-    string uuid = 2;
+    string uuid = 1;
 }
 
 message QueryOneProcessResponse {
     ProcessInfo procInfo = 1;
     bytes stdout = 2;
     bytes stderr = 3;
+    string status = 4;
 }
 
 message QueryRunningProcessesRequest {
@@ -67,12 +69,13 @@ message QueryRunningProcessesRequest {
     
 message QueryRunningProcessesResponse {
      repeated ProcessInfo processTable = 1;
+     string status = 2;
 }
 
 service LinuxService {
-    rpc ExecuteStart(StartRequest) returns(StartResponse){};
-    rpc ExecuteStop(StopRequest) returns(StopResponse){};
-    rpc ExecuteQueryOneProcess(QueryOneProcessRequest) returns(QueryOneProcessResponse){}
-    rpc ExecuteQueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningProcessesResponse){}
+    rpc Start(StartRequest) returns(StartResponse){};
+    rpc Stop(StopRequest) returns(StopResponse){};
+    rpc QueryOneProcess(QueryOneProcessRequest) returns(QueryOneProcessResponse){}
+    rpc QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningProcessesResponse){}
 
 }

@@ -40,13 +40,13 @@ The scope of this project would only deal with a single linux worker server inte
 
 * The Start command is called with a StartRequest that has the client's command and required arguments and optional env, dir params
 
-* A uuid (universal unique identification) will be generated and a folder called START-\<startTimeStamp\>will be created, two logs called PID-<pid>-stdout.log and PID-<pid>-stderr.log will be created
+* A uuid (universal unique identification) will be generated and a folder called START-\<startTimeStamp\>will be created, two logs called stdout.log and stderr.log will be created
 
-* the start command will execute the job and return with the uuid, pid, startTimeStamp, if it fails to execute then a log called FAILED-\<endtimestamp\>.log will be created to indcate that the job failed to execute, and the process table will be correspondingly updated
+* the start command will execute the job and return with the uuid, pid, startTimeStamp, if it fails the process table will be correspondingly updated
 
 * goroutines should manage running processes in the background (outputing into logs, updating dataStore)
 
-* when the job is done it will generate a log called END-\<endtimestamp\>.log, and the process table will be updated
+* when the job is done the process table will be updated
 
 ```
 type StartRequest {
@@ -70,10 +70,12 @@ type StartResponse {
     string uuid
     //starting time of start request
     string startTimeStamp
+    string status
+    
 
 }
 
-func ExecuteStart(StartRequest) returns(StartResponse)
+func Start(StartRequest) returns(StartResponse)
 ```
 
 #### Stop
@@ -88,16 +90,18 @@ func ExecuteStart(StartRequest) returns(StartResponse)
 
 ```
 type StopRequest {
-    int pid
+    string uuid
 }
 
 type StopResponse {
     []byte stdout
     []byte stderr
     bool isKilled
+    string endTimeStamp
+    string status
 }
 
-func ExecuteStop(StopRequest) returns(StopResponse)
+func Stop(StopRequest) returns(StopResponse)
 
 ```
 
@@ -127,7 +131,6 @@ type ProcessInfo {
 }
 
 type QueryOneProcessRequest {
-    int pid 
     string uuid
 }
 
@@ -135,6 +138,7 @@ type QueryOneProcessResponse {
     processInfo procInfo
     []byte stdout 
     []byte stderr 
+    string status
 }
 
 type QueryRunningProcessesRequest {
@@ -143,10 +147,11 @@ type QueryRunningProcessesRequest {
     
 type QueryRunningProcessesResponse {
      ProcessInfo[] processTable 
+     string status
 }
 
-func ExecuteQueryOneProcess(QueryOneProcessRequest) returns(QueryOneProcessResponse)
-func ExecuteQueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningProcessesResponse)
+func QueryOneProcess(QueryOneProcessRequest) returns(QueryOneProcessResponse)
+func QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningProcessesResponse)
 
 ```
 
@@ -159,15 +164,14 @@ func ExecuteQueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRun
 
 ####  DataStore
 
-* we can use Map in Go to implement a set of structs to store process info and use sync.mutex to handle concurrent transactions, the key to the map will be \<uuid\>-\<startTimeStamp\>
+* we can use Map in Go to implement a set of structs to store process info and use sync.mutex to handle concurrent transactions, the key to the map will be \<uuid\>
      ```go
 
-        type ProcessInfo struct {
+       type ProcessInfo struct {
 		    pid int
 		    startTimeStamp string
 		    endTimeStamp string
 		    processName string
-		    uuid string
 		    logPath string
 		    stdoutPath string
 		    stderrPath string
@@ -175,16 +179,14 @@ func ExecuteQueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRun
 		    exitCode int
 	    }
 
-        type ProcessTable map[string]*ProcessInfo
-        type pidToUuid map[int]string
-        type uuidToPid map[string]int
+        //key will be uuid
+	    type ProcessTable map[string]*ProcessInfo
 
-        type DataStore struct {
-        	sync.RWMutex
-        	processTable
-        	pidToUuid
-        	uuidToPid
-        }
+	    type DataStore struct {
+		    sync.RWMutex
+		    ProcessTable
+		    logFolder string
+	    }
         //methods to update, delete, add, access, create accompanying log folders
 
 
@@ -231,7 +233,7 @@ func ExecuteQueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRun
 
 * Querys will use information from dataStore and logs from server
 
-* I~~mplement simple logging for server, as in the server stdout and stderr will output into a log in the server's filesystem~~
+* Implement simple logging for server, as in the server stdout and stderr will output into a log in the server's filesystem
     
     * Remarks: don't worry about the logs of the server itself, they can go to stdout/stderr if needed, something like systemd can redirect those to a file.
 
@@ -267,16 +269,7 @@ func ExecuteQueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRun
 
 * we will be using grpc with mutual tls
 
-* certificates will be generated using openssl and self-signed, though in a real production environment, certificates will be generated and signed 
-by a valid certificate authority (CA). there is :
-
-    * public domains:
-
-        *  Let’s Encrypt - a free automated open certificate authority got cert generation and distribution  
-
-    * private domains:
-
-        * vault to generate signing requests, centrify for renewels of certificates
+* certificates will be generated using openssl and self-signed to keep things simple for this project
 
 #### Mutual TLS 
 
@@ -346,6 +339,8 @@ by a valid certificate authority (CA). there is :
     * will be using []byte
 
 * Memory management of dataStore: Since running jobs over time and having the server keeping track of new entries of jobs in the data Store gets expensive, should their be a process to delete entries or truncate the data Store over time? Perhaps clear the dataStore after a period of time passed? Maybe delete jobs that have been done for a period of time?
+
+    * not within scope
 
 ### Development Timeline
 
