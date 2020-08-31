@@ -244,12 +244,10 @@ func QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningPro
     import(
         "fmt"
         guuid "github.com/google/uuid"
-        "time"
-        "strings"
     )
 
     func main() {
-        requestId := guuid.New().String() + "-" + strings.ReplaceAll(time.Now().Format("20060102150405.000000.000000000"),".","")
+        requestId := guuid.New().String()
         fmt.Println(requestId)
     }
 
