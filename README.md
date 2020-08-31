@@ -71,6 +71,7 @@ type StartResponse {
     //starting time of start request
     string startTimeStamp
     string status
+    int statusCode
     
 
 }
@@ -99,6 +100,7 @@ type StopResponse {
     bool isKilled
     string endTimeStamp
     string status
+    int statusCode
 }
 
 func Stop(StopRequest) returns(StopResponse)
@@ -128,6 +130,7 @@ type ProcessInfo {
     string uuid
     bool isRunning 
     int exitCode
+    string status
 }
 
 type QueryOneProcessRequest {
@@ -139,6 +142,7 @@ type QueryOneProcessResponse {
     []byte stdout 
     []byte stderr 
     string status
+    int statusCode
 }
 
 type QueryRunningProcessesRequest {
@@ -148,6 +152,7 @@ type QueryRunningProcessesRequest {
 type QueryRunningProcessesResponse {
      ProcessInfo[] processTable 
      string status
+     int statusCode
 }
 
 func QueryOneProcess(QueryOneProcessRequest) returns(QueryOneProcessResponse)
