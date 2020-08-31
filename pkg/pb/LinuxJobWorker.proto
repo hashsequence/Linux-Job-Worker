@@ -26,7 +26,7 @@ message StartResponse {
     //starting time of start request
     string startTimeStamp = 3;
     string status = 4;
-
+    int32 statusCode = 5;
 }
 
 
@@ -39,6 +39,7 @@ message StopResponse {
     bytes stderr = 2;
     bool isKilled = 3;
     string status = 4;
+    int32 statusCode = 5;
 }
 
 
@@ -62,6 +63,7 @@ message QueryOneProcessResponse {
     bytes stdout = 2;
     bytes stderr = 3;
     string status = 4;
+    int32 statusCode = 5;
 }
 
 message QueryRunningProcessesRequest {
@@ -71,6 +73,7 @@ message QueryRunningProcessesRequest {
 message QueryRunningProcessesResponse {
      repeated ProcessInfo processTable = 1;
      string status = 2;
+     int32 statusCode = 3;
 }
 
 service LinuxJobWorkerService {
@@ -78,5 +81,4 @@ service LinuxJobWorkerService {
     rpc Stop(StopRequest) returns(StopResponse){};
     rpc QueryOneProcess(QueryOneProcessRequest) returns(QueryOneProcessResponse){}
     rpc QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningProcessesResponse){}
-
 }
