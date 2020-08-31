@@ -40,7 +40,7 @@ The scope of this project would only deal with a single linux worker server inte
 
 * The Start command is called with a StartRequest that has the client's command and required arguments and optional env, dir params
 
-* A uuid (universal unique identification) will be generated and a folder called \<uuid\>-\<startTimeStamp\>will be created, two logs called PID-<pid>-stdout.log and PID-<pid>-stderr.log will be created
+* A uuid (universal unique identification) will be generated and a folder called START-\<startTimeStamp\>will be created, two logs called PID-<pid>-stdout.log and PID-<pid>-stderr.log will be created
 
 * the start command will execute the job and return with the uuid, pid, startTimeStamp, if it fails to execute then a log called FAILED-\<endtimestamp\>.log will be created to indcate that the job failed to execute, and the process table will be correspondingly updated
 
