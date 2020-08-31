@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package linuxWorker;
-option go_package="LinuxWorkerPb";
+package linuxJobWorker;
+option go_package="LinuxJobWorkerPb";
 
 
 message StartRequest {
@@ -50,6 +50,7 @@ message ProcessInfo {
     string uuid = 5;
     bool isRunning = 6;
     int32 exitCode = 7;
+    string status = 8;
 }
 
 message QueryOneProcessRequest {
@@ -72,7 +73,7 @@ message QueryRunningProcessesResponse {
      string status = 2;
 }
 
-service LinuxService {
+service LinuxJobWorkerService {
     rpc Start(StartRequest) returns(StartResponse){};
     rpc Stop(StopRequest) returns(StopResponse){};
     rpc QueryOneProcess(QueryOneProcessRequest) returns(QueryOneProcessResponse){}
