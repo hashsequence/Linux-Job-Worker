@@ -42,7 +42,7 @@ The scope of this project would only deal with a single linux worker server inte
 
 * A uuid (universal unique identification) will be generated and a folder called \<uuid\>-\<startTimeStamp\>will be created, two logs called PID-<pid>-stdout.log and PID-<pid>-stderr.log will be created
 
-* the start command will execute the job and return with the uuid, pid, startTimeStamp, if it fails to execute then a log called FAILED.log will be created to indcate that the job failed to execute, and the process table will be correspondingly updated
+* the start command will execute the job and return with the uuid, pid, startTimeStamp, if it fails to execute then a log called FAILED-\<endtimestamp\>.log will be created to indcate that the job failed to execute, and the process table will be correspondingly updated
 
 * goroutines should manage running processes in the background (outputing into logs, updating dataStore)
 
@@ -163,15 +163,17 @@ func ExecuteQueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRun
      ```go
 
         type ProcessInfo struct {
-            pid int
-            startTimeStamp string
-            endTimeStamp string
-            processName string
-            uuid string
-            logPath string
-            isRunning bool
-            exitCode int
-        }
+		    pid int
+		    startTimeStamp string
+		    endTimeStamp string
+		    processName string
+		    uuid string
+		    logPath string
+		    stdoutPath string
+		    stderrPath string
+		    isRunning bool
+		    exitCode int
+	    }
 
         type ProcessTable map[string]*ProcessInfo
         type pidToUuid map[int]string
