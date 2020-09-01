@@ -33,20 +33,27 @@ message StopRequest {
 }
 
 message StopResponse {
+    //output of stdout.log
     bytes stdout = 1;
+    //output of stderr.log
     bytes stderr = 2;
-    bool isKilled = 3;
+    //time of job being killed
+    string endTimeStamp = 3;
+     //indication of process being killed
+    bool isKilled = 4;
 }
 
 
 message ProcessInfo {
+    //process id assigned for process ran in server
     int32 pid = 1;
     string startTimeStamp = 2;
     string endTimeStamp = 3;
     string processName = 4;
-    bool isRunning = 6;
-    int32 exitCode = 7;
-    string status = 8;
+    //status of whether process is still running
+    bool isRunning = 5;
+    //exitCode of process
+    int32 exitCode = 6;
 }
 
 message QueryOneProcessRequest {
