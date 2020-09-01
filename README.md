@@ -167,7 +167,7 @@ func QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningPro
 	}
         }
     ```
-    the error 
+    The error is formated using the grpc/status pkg and returned accordingly in the return statement
 
 ### Implementation Overview 
 
