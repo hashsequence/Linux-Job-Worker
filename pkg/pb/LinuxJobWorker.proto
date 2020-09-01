@@ -41,6 +41,7 @@ message StopResponse {
     string endTimeStamp = 3;
      //indication of process being killed
     bool isKilled = 4;
+    int32 exitCode = 5;
 }
 
 

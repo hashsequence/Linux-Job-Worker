@@ -95,6 +95,7 @@ type StopResponse {
     []byte stderr
     bool isKilled
     string endTimeStamp
+    int exitCode
 }
 
 func Stop(StopRequest) returns(StopResponse)
