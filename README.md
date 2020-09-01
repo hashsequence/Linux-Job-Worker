@@ -114,7 +114,7 @@ func Stop(StopRequest) returns(StopResponse)
 
     * QueryOneProcess:
 
-        * return the logs of a job using a valid pid (if it was started) or uuid, along with ProcessInfo
+        * return the logs of a job using a valid uuid, along with ProcessInfo
 
 
     * QueryRunningProcesses:
