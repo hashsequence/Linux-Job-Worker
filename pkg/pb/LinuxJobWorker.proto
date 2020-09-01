@@ -48,7 +48,6 @@ message ProcessInfo {
     string startTimeStamp = 2;
     string endTimeStamp = 3;
     string processName = 4;
-    string uuid = 5;
     bool isRunning = 6;
     int32 exitCode = 7;
     string status = 8;
