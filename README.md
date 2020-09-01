@@ -141,7 +141,8 @@ type QueryRunningProcessesRequest {
 }
     
 type QueryRunningProcessesResponse {
-     ProcessInfo[] processTable 
+     //return a map where uuid is the key and processInfo is the value stored
+     map[string][ProcessInfo] processTable 
 }
 
 func QueryOneProcess(QueryOneProcessRequest) returns(QueryOneProcessResponse)

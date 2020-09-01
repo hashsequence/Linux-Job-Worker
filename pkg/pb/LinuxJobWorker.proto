@@ -72,7 +72,7 @@ message QueryRunningProcessesRequest {
 }
     
 message QueryRunningProcessesResponse {
-     repeated ProcessInfo processTable = 1;
+    map<string, ProcessInfo> processTable = 1;
 }
 
 service LinuxJobWorkerService {
