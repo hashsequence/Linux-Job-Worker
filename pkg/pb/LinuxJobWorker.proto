@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package linuxJobWorker;
+option go_package="LinuxJobWorkerPb";
+
+
+message StartRequest {
+    //path of a program or executable
+    string command = 1;
+    //arguments to invoke program or executable with
+    repeated string args = 2;
+    // environment variables for the execution
+    //OPTIONAL variable
+    repeated string env = 3;
+    // current working directory of the execution
+    //OPTIONAL variable, default will be the working directory of server 
+    string dir = 4;
+}
+
+message StartResponse {
+    //process Id of the running process executed by the command
+    //will be 0 if process failed to execute
+    int32 pid = 1;
+    //univeral unique identifier that tags each unique request made to server
+    string uuid = 2;
+    //starting time of start request
+    string startTimeStamp = 3;
+}
+
+
+message StopRequest {
+    string uuid = 1;
+}
+
+message StopResponse {
+    //output of stdout.log
+    bytes stdout = 1;
+    //output of stderr.log
+    bytes stderr = 2;
+    //time of job being killed
+    string endTimeStamp = 3;
+     //indication of process being killed
+    bool isKilled = 4;
+    int32 exitCode = 5;
+}
+
+
+message ProcessInfo {
+    //process id assigned for process ran in server
+    int32 pid = 1;
+    string startTimeStamp = 2;
+    string endTimeStamp = 3;
+    string processName = 4;
+    //status of whether process is still running
+    bool isRunning = 5;
+    //exitCode of process
+    int32 exitCode = 6;
+}
+
+message QueryOneProcessRequest {
+    string uuid = 1;
+}
+
+message QueryOneProcessResponse {
+    ProcessInfo procInfo = 1;
+    bytes stdout = 2;
+    bytes stderr = 3;
+}
+
+message QueryRunningProcessesRequest {
+    //will be empty since the server just needs to verify its a QueryRunningProcessesRequest
+}
+    
+message QueryRunningProcessesResponse {
+    map<string, ProcessInfo> processTable = 1;
+}
+
+service LinuxJobWorkerService {
+    rpc Start(StartRequest) returns(StartResponse){};
+    rpc Stop(StopRequest) returns(StopResponse){};
+    rpc QueryOneProcess(QueryOneProcessRequest) returns(QueryOneProcessResponse){}
+    rpc QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningProcessesResponse){}
+}
