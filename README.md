@@ -81,9 +81,9 @@ func Start(StartRequest) returns(StartResponse)
 
 #### Stop
 
-* The User should be able to stop the request based on the pid
+* The User should be able to stop the request based on the uuid
 
-* When stopped the pid should be killed 
+* When stopped the process should be killed 
 
 * A response will be sent to client indicating process have been stopped along with the contents of the log
 
@@ -392,4 +392,3 @@ func QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningPro
 * Implement Query 
 
 * Write Tests
-
