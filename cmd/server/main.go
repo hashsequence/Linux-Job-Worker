@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	server "github.com/hashsequence/Copy-Linux-Job-Worker/pkg/server"
+	server "github.com/hashsequence/Linux-Job-Worker/pkg/server"
 )
 
 const (

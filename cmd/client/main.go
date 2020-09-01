@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	clientLib "github.com/hashsequence/Copy-Linux-Job-Worker/pkg/client"
-	linuxJobWorkerPb "github.com/hashsequence/Copy-Linux-Job-Worker/pkg/pb"
+	clientLib "github.com/hashsequence/Linux-Job-Worker/pkg/client"
+	linuxJobWorkerPb "github.com/hashsequence/Linux-Job-Worker/pkg/pb"
 	"log"
 	"context"
 	"time"

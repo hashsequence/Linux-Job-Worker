@@ -10,7 +10,7 @@ import (
 	"crypto/x509"
 	"crypto/tls"
 	"io/ioutil"
-	linuxJobWorkerPb "github.com/hashsequence/Copy-Linux-Job-Worker/pkg/pb"
+	linuxJobWorkerPb "github.com/hashsequence/Linux-Job-Worker/pkg/pb"
 )
 
 

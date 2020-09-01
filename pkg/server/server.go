@@ -2,9 +2,9 @@ package server
 
 import (
 	"fmt"
-	ds "github.com/hashsequence/Copy-Linux-Job-Worker/pkg/dataStore"
-	linuxJobWorkerPb "github.com/hashsequence/Copy-Linux-Job-Worker/pkg/pb"
-	utils "github.com/hashsequence/Copy-Linux-Job-Worker/pkg/utils"
+	ds "github.com/hashsequence/Linux-Job-Worker/pkg/dataStore"
+	linuxJobWorkerPb "github.com/hashsequence/Linux-Job-Worker/pkg/pb"
+	utils "github.com/hashsequence/Linux-Job-Worker/pkg/utils"
 	"io"
 	"io/ioutil"
 	"os"
