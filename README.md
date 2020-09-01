@@ -32,9 +32,9 @@ The scope of this project would only deal with a single linux worker server inte
 
 ### API Design
 
-* The client will have an Command Api that takes in three types of request, Start, Stop, and Query
+* The client will have an APIs' that handle the three types of request, Start, Stop, and Query
 
-* The client can then execute the commands over the server via Execute APIs'
+* The client can then execute the commands over the server via the APIs'
 
 #### Start
 
@@ -42,11 +42,11 @@ The scope of this project would only deal with a single linux worker server inte
 
 * A uuid (universal unique identification) will be generated and a folder called START-\<startTimeStamp\>will be created, two logs called stdout.log and stderr.log will be created
 
-* the start command will execute the job and return with the uuid, pid, startTimeStamp, if it fails the process table will be correspondingly updated
+* The start command will execute the job and return with the uuid, pid, startTimeStamp, if it fails the process table will be correspondingly updated
 
-* goroutines should manage running processes in the background (outputing into logs, updating dataStore)
+* Goroutines should manage running processes in the background (outputing into logs, updating dataStore)
 
-* when the job is done the process table will be updated
+* When the job is done the process table will be updated
 
 ```
 type StartRequest {
@@ -83,7 +83,7 @@ func Start(StartRequest) returns(StartResponse)
 
 * A response will be sent to client indicating process have been stopped along with the contents of the log
 
-* job should be marked as completed with the exit code in the dataStore
+* Job should be marked as completed with the exit code in the dataStore
 
 ```
 type StopRequest {
@@ -108,12 +108,12 @@ func Stop(StopRequest) returns(StopResponse)
 
     * QueryOneProcess:
 
-        * return the logs of a job using a valid uuid, along with ProcessInfo
+        * Return the logs of a job using a valid uuid, along with ProcessInfo
 
 
     * QueryRunningProcesses:
 
-        * get a list of job's executed and processInfo for the jobs
+        * Get a list of job's executed and processInfo for the jobs
 
 ```
 type ProcessInfo {
@@ -123,7 +123,6 @@ type ProcessInfo {
     string processName 
     bool isRunning 
     int exitCode
-    string status
 }
 
 type QueryOneProcessRequest {
@@ -173,11 +172,11 @@ func QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningPro
 
 * Using GRPC so the above methods and types with be generated via protocol buffers (will be using libprotoc 3.11.4)
 
-* the rpc APIs' will be all unary to keep the client - server communication simple
+* The rpc APIs' will be all unary to keep the client - server communication simple
 
 ####  DataStore
 
-* we can use Map in Go to implement a set of structs to store process info and use sync.mutex to handle concurrent transactions, the key to the map will be \<uuid\>
+* We can use Map in Go to implement a set of structs to store process info and use sync.mutex to handle concurrent transactions, the key to the map will be \<uuid\>
      ```go
 
        type ProcessInfo struct {
@@ -213,19 +212,19 @@ func QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningPro
 
 #### Server 
 
-* use a DataStore Structure to function as a in-memory database
+* Use a DataStore Structure to function as a in-memory database
 
-* function to execute commands 
+* Function to execute commands 
 
     * os/exec and syscall packages can take care of this
 
-* logfile system management
+* Logfile system management
 
-    * can use log, writer and reader packages
+    * Can use log, writer and reader packages
 
-    * must manage concurrency issues with read and write
+    * Must manage concurrency issues with read and write
     
-    * will be similar to how linux implements it using the /proc path:
+    * Will be similar to how linux implements it using the /proc path:
         ```
         $ ls -al  /proc | head -n 10
         total 4
@@ -242,9 +241,9 @@ func QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningPro
 
 * The server will store process info of jobs that were requeste in memory in the dataStore and have logs for each request named \<uuid\>-\<startTimeStamp\> folder
 
-* concurrent go routines to handle cmd executions starting and finishing 
+* Concurrent go routines to handle cmd executions starting and finishing 
 
-* killing of pid can be implemented via os.Process.Signal() by sending a kill signal to process
+* Killing of pid can be implemented via os.Process.Signal() by sending a kill signal to process
 
 * Querys will use information from dataStore and logs from server
 
@@ -269,70 +268,70 @@ func QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningPro
 
 #### Client
 
-* client is responsible for constructing the commands to be passed to server via the Execute APIs'
+* Client is responsible for constructing the commands to be passed to server via the Execute APIs'
 
-* client is responsible for interpreting response from Execute APIs'
+* Client is responsible for interpreting response from Execute APIs'
 
-* client should remember the information from the response of the requests from the server
+* Client should remember the information from the response of the requests from the server
 
 
 ### Authentication
 
 * Using standard GRPC tsl/ssl encryption and authentication via certificates
 
-* we will be using grpc with mutual tls
+* We will be using grpc with mutual tls
 
-* certificates will be generated using openssl and self-signed to keep things simple for this project
+* Certificates will be generated using openssl and self-signed to keep things simple for this project
 
 #### Mutual TLS 
 
-* since the client is basically sending commands to the server, both the server and client must know they are indeed safe and valid. Basically we are trying to solve the problem of encrypting messages between client and server and the client and server must know that they are indeed client and server, but how do we solve this?
+* Since the client is basically sending commands to the server, both the server and client must know they are indeed safe and valid. Basically we are trying to solve the problem of encrypting messages between client and server and the client and server must know that they are indeed client and server, but how do we solve this?
 
-* here's the basic algorithm to verify:
+* Here's the basic algorithm to verify:
     
     * We have the client, the server, and and an authority
 
-    * the client ask if the server is indeed the valid server
+    * The client ask if the server is indeed the valid server
 
-    * the server send its certificate 
+    * The server send its certificate 
 
-    * the client verifys the certificate with the authority
+    * The client verifys the certificate with the authority
 
-    * the client then sends its certificate to the server after validating the server's certificate is goo
+    * The client then sends its certificate to the server after validating the server's certificate is goo
 
-    * the server verifys the certificate with the authority
+    * The server verifys the certificate with the authority
 
-    * the server then verifies that the certficate is good 
+    * The server then verifies that the certficate is good 
 
-    * now both the server and client knows that the connection is secure
+    * Now both the server and client knows that the connection is secure
 
-    * the server and client have the respective keys (public key via in the certificates transfered) to encrypt the message, and the respective sides have they own
+    * The server and client have the respective keys (public key via in the certificates transfered) to encrypt the message, and the respective sides have they own
     private keys to decrypt the message
 
-* does this algo work?
+* Does this algo work?
 
-    * first the client and server can verify its validity by having a central authority to validate both certs
+    * First the client and server can verify its validity by having a central authority to validate both certs
 
-    * when the client/server sends over their certs over connection, if it was tampered with it will be rejected by the authority, and the intermediaries cant really use the information without knowing how to decrypt the message
+    * When the client/server sends over their certs over connection, if it was tampered with it will be rejected by the authority, and the intermediaries cant really use the information without knowing how to decrypt the message
 
-    * a problem arises when the certificate authority is compromised and is not trustworthy, like someone had access to the ca.key, so how do we have a strong certificate authority, one simple way you could do is have that ca.crt and key in a box without any outside connection, and whenever you need new certs you physically go to the body and sign new certs for new servers/clients. this is hugely un-scalable so we can probably have the box accept secure request from the outside coming in to request certs to be signed. 
+    * A problem arises when the certificate authority is compromised and is not trustworthy, like someone had access to the ca.key, so how do we have a strong certificate authority, one simple way you could do is have that ca.crt and key in a box without any outside connection, and whenever you need new certs you physically go to the body and sign new certs for new servers/clients. this is hugely un-scalable so we can probably have the box accept secure request from the outside coming in to request certs to be signed. 
 
 * Now how do we create all the needed certs and keys?
 
     * First we need a certificate authority(ca), the certificate authority provides the server and client its first certificate (ca.crt) it trusts
         
-        * the certificate authority has a private key (ca.key) that is used to create valid certificates for client and server
+        * The certificate authority has a private key (ca.key) that is used to create valid certificates for client and server
         
-        * the the server/client generates its own certificate accompanied with the private key to decrypt 
+        * The the server/client generates its own certificate accompanied with the private key to decrypt 
 
-        * when a server or client asks to have the certificate validated, the server/client sends a request (.csr) to the ca to create a signed certificate
+        * When a server or client asks to have the certificate validated, the server/client sends a request (.csr) to the ca to create a signed certificate
 
 * In this project we will be making things simpler, since I am the one building the client and server I can make my own ca.crt + ca.key and have it sign
  the server.crt and client.crt, which is self signing. In production, I would probably have a legitimate certificate authority and a legitimate ca.crt
 
- * the format of the crt wil be [x509](https://en.wikipedia.org/wiki/X.509) 
+ * The format of the crt wil be [x509](https://en.wikipedia.org/wiki/X.509) 
 
- * will be using openssl to generate these certificates
+ * Will be using openssl to generate these certificates
 
 
 
@@ -341,19 +340,19 @@ func QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningPro
 
 * Should the client remember commands they executed and remember the pids, starting timestamp, process command?
 
-    * yes, but not across restarts
+    * Yes, but not across restarts
 
 * Will logs that are too old be deleted by server, or should the logs just stay in the file system storage, should this be within the scope of the project?
     
-    * log cleanup is not in scope
+    * Log cleanup is not in scope
 
 * For the output of logs, should the should the contents of the log be loaded into a string array in the response message, or should I leave it as string?
     
-    * will be using []byte
+    * Will be using []byte
 
 * Memory management of dataStore: Since running jobs over time and having the server keeping track of new entries of jobs in the data Store gets expensive, should their be a process to delete entries or truncate the data Store over time? Perhaps clear the dataStore after a period of time passed? Maybe delete jobs that have been done for a period of time?
 
-    * not within scope
+    * Not within scope
 
 ### Development Timeline
 
@@ -361,9 +360,9 @@ func QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningPro
 
 * Setup local development environment 
 
-    * working on Ubuntu 16.04 
+    * Working on Ubuntu 16.04 
     
-    * install protoc (will be using proto3)
+    * Install protoc (will be using proto3)
         
         * current version
         ```
@@ -371,14 +370,14 @@ func QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningPro
         libprotoc 3.11.4
 
         ```
-    * install golang 
+    * Install golang 
         
         * current version
         ```
         $ go version
         go version go1.15 linux/amd64
         ```
-    * install openssl (to generate certificates and keys)
+    * Install openssl (to generate certificates and keys)
 
         * current version
         ```
@@ -388,7 +387,7 @@ func QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningPro
 
 * Setup project directory
 
-    * setup go modules (dependency management)
+    * Setup go modules (dependency management)
 
 * Write Protocol Buffers for grpc and generate go package [LinuxWorker.proto](https://github.com/hashsequence/Linux-Job-Worker/blob/feature/Design-Doc_Avery_V2/pb/LinuxWorker.proto)
 
