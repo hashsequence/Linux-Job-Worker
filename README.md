@@ -127,7 +127,6 @@ type ProcessInfo {
     string startTimeStamp 
     string endTimeStamp
     string processName 
-    string uuid
     bool isRunning 
     int exitCode
     string status
