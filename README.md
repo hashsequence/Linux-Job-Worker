@@ -183,6 +183,7 @@ func QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningPro
 		    isRunning bool
             exitCode int
             string status
+            //possible other metadata fields to manage processes
 	    }
 
         //key will be uuid
