@@ -25,8 +25,6 @@ message StartResponse {
     string uuid = 2;
     //starting time of start request
     string startTimeStamp = 3;
-    string status = 4;
-    int32 statusCode = 5;
 }
 
 
@@ -38,8 +36,6 @@ message StopResponse {
     bytes stdout = 1;
     bytes stderr = 2;
     bool isKilled = 3;
-    string status = 4;
-    int32 statusCode = 5;
 }
 
 
@@ -61,8 +57,6 @@ message QueryOneProcessResponse {
     ProcessInfo procInfo = 1;
     bytes stdout = 2;
     bytes stderr = 3;
-    string status = 4;
-    int32 statusCode = 5;
 }
 
 message QueryRunningProcessesRequest {
@@ -71,8 +65,6 @@ message QueryRunningProcessesRequest {
     
 message QueryRunningProcessesResponse {
      repeated ProcessInfo processTable = 1;
-     string status = 2;
-     int32 statusCode = 3;
 }
 
 service LinuxJobWorkerService {

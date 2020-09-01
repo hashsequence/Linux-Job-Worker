@@ -69,11 +69,7 @@ type StartResponse {
     //univeral unique identifier that tags each unique request made to server
     string uuid
     //starting time of start request
-    string startTimeStamp
-    string status
-    int statusCode
-    
-
+    string startTimeStamp    
 }
 
 func Start(StartRequest) returns(StartResponse)
@@ -99,8 +95,6 @@ type StopResponse {
     []byte stderr
     bool isKilled
     string endTimeStamp
-    string status
-    int statusCode
 }
 
 func Stop(StopRequest) returns(StopResponse)
@@ -140,8 +134,6 @@ type QueryOneProcessResponse {
     processInfo procInfo
     []byte stdout 
     []byte stderr 
-    string status
-    int statusCode
 }
 
 type QueryRunningProcessesRequest {
@@ -150,8 +142,6 @@ type QueryRunningProcessesRequest {
     
 type QueryRunningProcessesResponse {
      ProcessInfo[] processTable 
-     string status
-     int statusCode
 }
 
 func QueryOneProcess(QueryOneProcessRequest) returns(QueryOneProcessResponse)
@@ -159,6 +149,25 @@ func QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningPro
 
 ```
 
+#### Error Handling
+
+* Errors will be handled using the grpc error handling package in Go: [gprc/status](https://pkg.go.dev/google.golang.org/grpc/status?tab=doc)
+
+* List of possible grpc Codes can be found here: [grpc error codes](https://pkg.go.dev/google.golang.org/grpc@v1.31.1/codes?tab=doc#Code)
+
+* For Example in the Start API:
+    ```go
+        Start(context.Context, *StartRequest) (*StartResponse, error) {
+            //...logic for start...
+
+
+            //error return
+            return nil, status.Errorf(codes.FailedPrecondition,
+			"Start Process Did Not Start")
+	}
+        }
+    ```
+    the error 
 
 ### Implementation Overview 
 
