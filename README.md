@@ -357,8 +357,6 @@ func QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningPro
 
 ### Development Timeline
 
-(Will be Updated througout development)
-
 * Setup local development environment 
 
     * Working on Ubuntu 16.04 
@@ -392,12 +390,12 @@ func QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningPro
 
 * Write Protocol Buffers for grpc and generate go package [LinuxWorker.proto](https://github.com/hashsequence/Linux-Job-Worker/blob/feature/Design-Doc_Avery_V2/pb/LinuxWorker.proto)
 
-* Implement Authentication and Encryption for grpc in go
+* Implement Authentication and Encryption for grpc in go -[X]
 
-* Implement Start 
+* Implement Start -[X]
 
-* Implement Stop
+* Implement Stop -[X]
 
-* Implement Query 
+* Implement Query -[X]
 
-* Write Tests
+* Write Tests -[X]
