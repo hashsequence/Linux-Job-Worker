@@ -390,12 +390,12 @@ func QueryRunningProcesses(QueryRunningProcessesRequest) returns(QueryRunningPro
 
 * Write Protocol Buffers for grpc and generate go package [LinuxWorker.proto](https://github.com/hashsequence/Linux-Job-Worker/blob/feature/Design-Doc_Avery_V2/pb/LinuxWorker.proto)
 
-* Implement Authentication and Encryption for grpc in go -[X]
+* Implement Authentication and Encryption for grpc in go - [x]
 
-* Implement Start -[X]
+* Implement Start - [x]
 
-* Implement Stop -[X]
+* Implement Stop - [x]
 
-* Implement Query -[X]
+* Implement Query - [x]
 
-* Write Tests -[X]
+* Write Tests - [x]
